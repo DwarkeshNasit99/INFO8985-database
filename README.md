@@ -11,9 +11,8 @@ This project demonstrates a full monitoring setup for a PostgreSQL database usin
 ## How to Run
 
 1. **Start the stack:**
-   ```bash
    docker-compose -f lcbo/docker-compose.yml up -d
-   ```
+ 
    This will start PostgreSQL, pgAdmin, and the OpenTelemetry Collector.
 
 2. **Access pgAdmin:**
