@@ -1,0 +1,42 @@
+receivers:
+  postgresql:
+    collection_interval: 10s
+    endpoint: db:5432
+    username: devtedsuser
+    password: devtedspass
+    transport: tcp
+    tls:
+      insecure: true
+
+  sqlquery:
+    collection_interval: 10s
+    driver: postgres
+    datasource: "host=db port=5432 user=devtedsuser password=devtedspass dbname=demodb sslmode=disable"
+    queries:
+      - sql: "SELECT count(*) as total_products FROM products"
+        metrics:
+          - metric_name: products.total
+            value_column: "total_products"
+            unit: "1"
+            description: "Total number of products in the database"
+
+processors:
+  batch:
+    timeout: 1s
+    send_batch_size: 1024
+
+exporters:
+  prometheus:
+    endpoint: "0.0.0.0:8889"
+    namespace: "lcbo"
+    send_timestamps: true
+    metric_expiration: 180m
+    resource_to_telemetry_conversion:
+      enabled: true
+
+service:
+  pipelines:
+    metrics:
+      receivers: [postgresql, sqlquery]
+      processors: [batch]
+      exporters: [prometheus] 

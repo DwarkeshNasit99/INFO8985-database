@@ -27,6 +27,16 @@ services:
     volumes:                 
       - pg-data:/var/lib/postgresql/data
 
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:latest
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    volumes:
+      - ../otel-config/otel-collector-config.yaml:/etc/otel-collector-config.yaml
+    ports:
+      - "8889:8889"  
+    depends_on:
+      - db
+
 volumes:
   pgadmin-data:
   pg-data:
